@@ -8,6 +8,7 @@ import authRoutes from './routes/auth';
 import ticketRoutes from './routes/tickets';
 import agentRoutes from './routes/agents';
 import dashboardRoutes from './routes/dashboard';
+import intelligenceRoutes from './routes/intelligence';
 import { startSlaEscalator, startMetricsRefresher } from './services/sla-escalator';
 
 dotenv.config();
@@ -58,6 +59,7 @@ app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/tickets', ticketRoutes);
 app.use('/api/agents', agentRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/intelligence', intelligenceRoutes);
 
 // Health check
 app.get('/health', (_req, res) => {

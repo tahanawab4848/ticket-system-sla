@@ -18,7 +18,7 @@ SELECT
     COUNT(*) FILTER (WHERE status = 'in_progress') as in_progress_tickets,
     COUNT(*) FILTER (WHERE priority = 'critical' AND responded_at IS NULL) as sla_breach_risk,
     COALESCE(AVG(EXTRACT(epoch FROM (responded_at - created_at))/3600), 0) as avg_response_hours,
-    COALESCE(AVG(EXTRACT(epoch FROM (resolved_at - created_at))/24), 0) as avg_resolution_days
+    COALESCE(AVG(EXTRACT(epoch FROM (resolved_at - created_at))/86400), 0) as avg_resolution_days
 FROM tickets 
 WHERE created_at > NOW() - INTERVAL '30 days';
 

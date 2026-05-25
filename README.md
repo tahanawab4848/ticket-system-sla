@@ -1,91 +1,80 @@
-# Customer Support Ticket System with SLA Monitoring
+# ZetaSentry: Intelligence-Driven Support Hub
 
-A full-stack ticket management system with real-time SLA monitoring, pessimistic locking, audit trails, and materialized view dashboards.
+A premium, localized full-stack ticket ecosystem featuring database-native intelligence: automatic outbreak detection, dynamic urgency prioritization, agent expertise matching, and real-time co-pilot suggestions.
 
-## Stack
+Built by **Taha Nawab** 💻
+
+---
+
+## ⚡ Architecture & Tech Stack
+- **Frontend**: React + Vite + TypeScript + TailwindCSS (styled with glassmorphic dark-sentry theme)
 - **Backend**: Node.js + Express + TypeScript
-- **Frontend**: React + Vite + TypeScript + TailwindCSS
-- **Database**: PostgreSQL (Neon.tech or any Postgres)
+- **Database**: PostgreSQL (Neon.tech or standard Postgres)
+- **Workflow**: `node-cron` orchestrators + native PostgreSQL PL/pgSQL triggers
 
-## Features
-- 🎫 Full ticket CRUD with pagination and filtering
-- 🔐 Session-based auth with role-based access (admin / manager / agent)
-- ⚡ Pessimistic locking (`FOR UPDATE SKIP LOCKED`) — prevents race conditions on ticket claims
-- 📊 Materialized view dashboard — 10× faster than live aggregations
-- ⏰ SLA escalator cron job — auto-escalates critical tickets unresponded after 4h
-- 📋 Full audit trail via PostgreSQL trigger — every change recorded
-- 🗃️ 10,000 seed tickets across 5 agents for realistic load testing
+---
 
-## Quick Start
+## 🚀 Key Features
 
-### 1. Database (Neon.tech)
-1. Create a free project at https://neon.tech
-2. Copy the connection string
+### 1. Database-Native Intelligence Engine
+- **🧬 Ticket DNA (Similar search)**: Utilizes PostgreSQL English word stem dictionaries (`to_tsvector`) and GIN indices to find active and resolved sibling tickets instantly.
+- **🚨 Outbreak Incident Alerts**: Materialized view filters that group ticket cluster vectors created within 48 hours to flag system anomalies before they spike.
+- **📈 Dynamic Urgency Queue**: Utilizes a logarithmic time-decay urgency score:
+  $$\text{Urgency} = \text{BasePriorityWeight} \times \ln(\text{HoursOpen} + 1)$$
+- **🎯 Agent Expertise Radar**: Automatically profiles agents by mapping top resolved ticket keywords and average resolution times.
 
-### 2. Backend
+### 2. High-Performance Base Engine
+- **🔐 Concurrency Protection**: Atomic claiming transactions protected by pessimistic row-level locks (`SELECT ... FOR UPDATE SKIP LOCKED`).
+- **📊 Materialized Dashboard View**: Speeds up dashboard stats by caching results in a materialized view (`dashboard_metrics`) refreshed by cron.
+- **⏰ SLA Escalation**: Background cron workers that auto-escalate critical tickets unresponded after 4 hours to `priority = 'escalated'`.
+- **📋 Transaction Audit Trigger**: `AFTER UPDATE` triggers that guarantee security auditing, writing data diffs directly to the `audit_logs` table.
 
+---
+
+## ⚙️ Quick Start
+
+### 1. Database Setup
+Ensure you run migrations to build the tables, triggers, and intelligence engines:
 ```bash
 cd backend
 cp .env.example .env
-# Edit .env — set DATABASE_URL, SESSION_SECRET
+# Set DATABASE_URL and SESSION_SECRET in .env
 
 npm install
-npm run migrate    # Run SQL migrations
-npm run seed       # Load 10k test tickets
-npm run dev        # Start on :3000
+npm run migrate    # Execute all database migrations
+npm run seed       # Seed 10,000 localized tickets & agent profiles
+npm run dev        # Launch backend api on http://localhost:3000
 ```
 
-### 3. Frontend
-
+### 2. Frontend Setup
 ```bash
 cd frontend
 cp .env.example .env
 npm install
-npm run dev        # Start on :5173
+npm run dev        # Launch Vite development server on http://localhost:5173
 ```
 
-### 4. Login
+---
 
-| Role    | Email                  | Password    |
-|---------|------------------------|-------------|
-| Admin   | admin@example.com      | password123 |
-| Manager | manager@example.com    | password123 |
-| Agent   | alice@example.com      | password123 |
+## 🔑 Localization & Test Credentials
 
-## Architecture Highlights
+The database seeding is pre-configured with localized Pakistani support team accounts:
 
-### Pessimistic Locking
-Ticket claims use `SELECT ... FOR UPDATE SKIP LOCKED` inside a transaction. Concurrent agents attempting to claim the same ticket — only one succeeds, the other gets a 409 immediately (no deadlocks).
+| Role | Email | Password |
+|---|---|---|
+| **Admin** | `admin@pakmail.com` | `password123` |
+| **Manager** | `manager@pakmail.com` | `password123` |
+| **Agent** | `ahmed@pakmail.com` | `password123` |
 
-### SLA Escalation
-`node-cron` fires every 5 minutes. Any `critical` ticket with no response after 4 hours is automatically escalated to `priority = 'escalated'` and logged in the audit trail.
+---
 
-### Materialized View
-`dashboard_metrics` is a PostgreSQL materialized view refreshed every 5 minutes. Provides O(1) dashboard reads regardless of ticket volume.
-
-### Audit Trigger
-A `AFTER INSERT OR UPDATE OR DELETE` trigger on the `tickets` table automatically writes every change to `audit_logs`, capturing old and new JSONB snapshots.
-
-## API Endpoints
+## 🔌 API Documentation (Intelligence Layer)
 
 | Method | Path | Description |
-|--------|------|-------------|
-| POST | /api/auth/login | Login |
-| POST | /api/auth/logout | Logout |
-| GET | /api/auth/me | Current user |
-| GET | /api/tickets | List tickets (paginated, filterable) |
-| GET | /api/tickets/:id | Get ticket |
-| POST | /api/tickets | Create ticket |
-| PATCH | /api/tickets/:id | Update ticket |
-| POST | /api/tickets/:id/claim | Atomically claim ticket |
-| DELETE | /api/tickets/:id | Delete ticket (admin) |
-| GET | /api/tickets/:id/audit | Audit trail |
-| GET | /api/dashboard | Metrics + SLA risk |
-| GET | /api/dashboard/sla | SLA report by priority |
-| GET | /api/agents | Agent list with workload |
-
-## Production Notes
-- Set `NODE_ENV=production` and `cookie.secure=true` behind HTTPS
-- Use `pg-session-store` for session persistence across restarts
-- Add `UNIQUE INDEX` on materialized view for `CONCURRENTLY` refresh
-- Set `SESSION_SECRET` to a long random string (32+ chars)
+|---|---|---|
+| **GET** | `/api/intelligence/similar/:id` | Get active tickets sharing the same DNA signature |
+| **GET** | `/api/intelligence/outbreaks` | Get active ticket clusters matching similar problems |
+| **GET** | `/api/intelligence/dynamic-priority` | Get priority queue sorted by logarithmic decay |
+| **GET** | `/api/intelligence/expertise` | Get agent list with speeds and matching skill tags |
+| **GET** | `/api/intelligence/suggest-agent/:id` | Get suggested agents ranked by skill matches |
+| **GET** | `/api/intelligence/resolution/:id` | Get resolution ideas based on matching resolved tickets |

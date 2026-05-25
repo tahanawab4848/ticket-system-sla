@@ -59,4 +59,23 @@ export const api = {
   // Dashboard
   getDashboard: () => request<any>('/dashboard'),
   getSlaReport: () => request<any[]>('/dashboard/sla'),
+
+  // Intelligence Engine
+  getSimilarTickets: (ticketId: number) =>
+    request<{ similar: any[]; ticketId: number }>(`/intelligence/similar/${ticketId}`),
+
+  getOutbreaks: () =>
+    request<{ text_clusters: any[]; keyword_clusters: any[] }>('/intelligence/outbreaks'),
+
+  getDynamicPriority: (limit = 20) =>
+    request<any[]>(`/intelligence/dynamic-priority?limit=${limit}`),
+
+  getAgentExpertise: () =>
+    request<any[]>('/intelligence/expertise'),
+
+  suggestAgent: (ticketId: number) =>
+    request<{ suggestions: any[]; ticketId: number }>(`/intelligence/suggest-agent/${ticketId}`),
+
+  getResolutionSuggestions: (ticketId: number) =>
+    request<{ suggestions: any[]; ticketId: number }>(`/intelligence/resolution/${ticketId}`),
 };

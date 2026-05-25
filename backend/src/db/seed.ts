@@ -10,13 +10,13 @@ async function seed() {
 
   const users = await pool.query(
     `INSERT INTO users (email, password_hash, name, role, department) VALUES
-      ('admin@example.com', $1, 'Admin User', 'admin', NULL),
-      ('manager@example.com', $1, 'Manager User', 'manager', 'Support'),
-      ('alice@example.com', $1, 'Alice Chen', 'agent', 'Support'),
-      ('bob@example.com', $1, 'Bob Wilson', 'agent', 'Support'),
-      ('carol@example.com', $1, 'Carol Davis', 'agent', 'Support'),
-      ('dave@example.com', $1, 'Dave Martinez', 'agent', 'Sales'),
-      ('eve@example.com', $1, 'Eve Thompson', 'agent', 'Support')
+      ('admin@pakmail.com', $1, 'Taha Nawab', 'admin', NULL),
+      ('manager@pakmail.com', $1, 'Sara Ahmed', 'manager', 'Support'),
+      ('ahmed@pakmail.com', $1, 'Ahmed Ali', 'agent', 'Support'),
+      ('bilal@pakmail.com', $1, 'Bilal Hussain', 'agent', 'Support'),
+      ('fatima@pakmail.com', $1, 'Fatima Raza', 'agent', 'Support'),
+      ('zeeshan@pakmail.com', $1, 'Zeeshan Malik', 'agent', 'Sales'),
+      ('nadia@pakmail.com', $1, 'Nadia Sheikh', 'agent', 'Support')
       ON CONFLICT (email) DO NOTHING
       RETURNING id, name, role`,
     [hashedPassword]
@@ -99,9 +99,9 @@ async function seed() {
   console.log('🎉 Seeding complete!');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('📊 Login credentials:');
-  console.log('   Admin:    admin@example.com / password123');
-  console.log('   Manager:  manager@example.com / password123');
-  console.log('   Agent:    alice@example.com / password123');
+  console.log('   Admin:    admin@pakmail.com / password123');
+  console.log('   Manager:  manager@pakmail.com / password123');
+  console.log('   Agent:    ahmed@pakmail.com / password123');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
   await pool.end();
