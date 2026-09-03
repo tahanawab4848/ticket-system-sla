@@ -9,7 +9,7 @@
     "seed": "ts-node src/db/seed.ts"
   },
   "dependencies": {
-    "express": "^4.18.2",
+    "express": "^5.2.1",
     "pg": "^8.11.0",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
